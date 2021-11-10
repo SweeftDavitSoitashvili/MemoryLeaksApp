@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log.d
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
+import java.lang.ref.WeakReference
 
 class SecondActivity : AppCompatActivity() {
 
@@ -23,7 +23,7 @@ class SecondActivity : AppCompatActivity() {
         secondActivityTextView = findViewById(R.id.secondActivityTextView)
         showToastMessageBtn = findViewById(R.id.showToastMessageBtn)
         displayMessage(secondActivityTextView.text.toString())
-        testThread = TestThread(this)
+        testThread = TestThread(WeakReference(this))
         testThread.start()
     }
 
@@ -38,11 +38,11 @@ class SecondActivity : AppCompatActivity() {
         }
     }
 
-    // memory leak case (pass strong reference)
-    class TestThread(var secondActivity: SecondActivity) : Thread() {
+    // fix memory leak case by passing weak reference
+    class TestThread(var secondActivity: WeakReference<SecondActivity>) : Thread() {
         override fun run() {
             super.run()
-            secondActivity.makeFakeApiCall()
+            secondActivity.get()?.makeFakeApiCall()
         }
     }
 }
