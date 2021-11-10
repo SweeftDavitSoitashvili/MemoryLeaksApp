@@ -17,7 +17,7 @@ class SecondActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
         init()
-        testInnerClass.printMessage()
+        testInnerClass.printMessage(secondActivityTextView.text.toString())
     }
 
     private fun init() {
@@ -25,10 +25,10 @@ class SecondActivity : AppCompatActivity() {
         testInnerClass = TestInnerClass()
     }
 
-    //Cases Memory leak
-    inner class TestInnerClass {
-        fun printMessage() {
-            d("LogPrintedMessage", secondActivityTextView.text.toString())
+    // Avoid Memory leak
+    class TestInnerClass {
+        fun printMessage(message : String) {
+            d("LogPrintedMessage", message)
         }
     }
 }
