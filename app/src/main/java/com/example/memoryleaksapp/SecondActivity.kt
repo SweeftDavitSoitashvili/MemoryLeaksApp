@@ -4,31 +4,33 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log.d
 import android.widget.TextView
-import android.widget.Toast
 
 class SecondActivity : AppCompatActivity() {
     private lateinit var secondActivityTextView : TextView
 
     companion object {
-        private lateinit var testInnerClass: TestInnerClass
+        private lateinit var testInterfaceAnonymous : TestInterface
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
         init()
-        testInnerClass.printMessage(secondActivityTextView.text.toString())
+        testInterfaceAnonymous.printMessage()
     }
 
     private fun init() {
         secondActivityTextView = findViewById(R.id.secondActivityTextView)
-        testInnerClass = TestInnerClass()
+        initAnonymousInterface()
     }
 
-    // Avoid Memory leak
-    class TestInnerClass {
-        fun printMessage(message : String) {
-            d("LogPrintedMessage", message)
+
+    private fun initAnonymousInterface() {
+        // memory leak case
+        testInterfaceAnonymous = object : TestInterface {
+            override fun printMessage() {
+                d("LogPrintedMessage", secondActivityTextView.text.toString())
+            }
         }
     }
 }
